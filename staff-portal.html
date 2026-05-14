@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradise Hotel - Staff Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ==================== STAFF LOGIN SECTION ==================== -->
+<div id="staffLoginSection" class="login-body">
+  <div class="login-box">
+    <h2>Staff Login</h2>
+    <p style="text-align: center; color: #666;">Please login to access the reservation system</p>
+
+    <input type="email" id="staffEmail" placeholder="Staff Email">
+    <input type="password" id="staffPassword" placeholder="Password">
+
+    <button id="staffLoginBtn">Login</button>
+
+    <p id="staffLoginMsg"></p>
+  </div>
+</div>
+
+<!-- ==================== MAIN RESERVATION SYSTEM (Hidden until login) ==================== -->
+<div id="mainSystem" style="display: none;">
+
+<!-- NAVBAR -->
+<header style="position: sticky; top: 0; z-index: 1000; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+  <div style="max-width: 1400px; margin: 0 auto; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;">
+    
+    <!-- Logo/Title -->
+    <h1 style="margin: 0; color: white; font-size: 24px; font-weight: 600;">ParadiseStay</h1>
+    
+    <!-- Navigation Links -->
+    <nav style="display: flex; align-items: center; gap: 25px;">
+      <a href="#rooms" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+        📋 Rooms
+      </a>
+      <a href="#book" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+        ➕ New Booking
+      </a>
+      <a href="#check" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+        🔍 Check Reservation
+      </a>
+      <a href="#reservations" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+        📊 All Reservations
+      </a>
+      <a href="#staff" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+        👥 Staff Management
+      </a>
+    </nav>
+
+    <!-- User Info & Logout -->
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <span id="staffName" style="color: white; font-weight: 500; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 14px; white-space: nowrap;"></span>
+      <button id="staffLogoutBtn" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background 0.3s; white-space: nowrap;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+        🚪 Logout
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-card">
+    <h2>Hotel Reservation Management System</h2>
+    <p>Manage bookings • Check availability • Customer service</p>
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section class="container" id="rooms">
+
+  <h2 class="section-title">Available Rooms</h2>
+
+  <div class="rooms" id="roomsContainer">
+    <!-- Room cards will be loaded dynamically -->
+  </div>
+</section>
+
+<!-- BOOKING FORM -->
+<section class="container booking" id="book">
+
+  <h2 class="section-title">Create New Reservation</h2>
+
+  <div class="booking-card">
+
+    <h3 style="margin-bottom: 20px;">Customer Information</h3>
+
+    <input type="text" id="customerName" placeholder="Customer Full Name *" required>
+    <input type="email" id="customerEmail" placeholder="Customer Email *" required>
+    <input type="tel" id="customerPhone" placeholder="Customer Phone Number *" required>
+
+    <h3 style="margin-top: 30px; margin-bottom: 20px;">Booking Details</h3>
+
+    <div class="date-row">
+      <input type="date" id="checkin" required>
+      <input type="date" id="checkout" required>
+    </div>
+
+    <button type="button" id="checkAvailabilityBtn" style="background: #007bff; margin-bottom: 20px;">
+      🔍 Check Available Rooms
+    </button>
+
+    <div id="availabilityMessage" style="padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; margin-bottom: 20px; display: none;">
+      <p style="margin: 0; color: #856404;">Please select check-in and check-out dates to see available rooms.</p>
+    </div>
+
+    <div id="roomSelectionSection" style="display: none;">
+      <h3 style="margin-bottom: 15px;">Select Rooms</h3>
+      <p style="color: #666; margin-bottom: 15px;">Select one or more available rooms for this reservation</p>
+
+      <div id="availableRoomsList" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #f9f9f9;">
+        <p style="text-align: center; color: #999;">Click "Check Available Rooms" to see availability</p>
+      </div>
+
+      <div id="selectedRoomsSummary" style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 8px; display: none;">
+        <h4 style="margin: 0 0 10px 0; color: #2e7d32;">Selected Rooms:</h4>
+        <div id="selectedRoomsList"></div>
+        <p style="margin: 10px 0 0 0; font-weight: bold; color: #1b5e20;">Total per night: <span id="totalPerNight">₱0</span></p>
+      </div>
+    </div>
+
+    <input type="number" id="numGuests" placeholder="Number of Guests" min="1" value="1" style="margin-top: 20px;">
+
+    <textarea id="specialRequests" placeholder="Special Requests (Optional)" rows="3" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; margin-top: 15px;"></textarea>
+
+    <!-- PAYMENT -->
+    <select id="payment" required>
+      <option value="">Select Payment Method</option>
+      <option value="cash">Cash</option>
+      <option value="credit_card">Credit Card</option>
+      <option value="debit_card">Debit Card</option>
+      <option value="online">Online Payment</option>
+    </select>
+
+    <button id="createReservationBtn" style="background: #28a745;">Create Reservation</button>
+
+    <div id="result"></div>
+  </div>
+
+</section>
+
+<!-- CHECK RESERVATION SECTION -->
+<section class="container" id="check" style="background: #f8f9fa; padding: 40px 20px; border-radius: 10px; margin: 30px auto;">
+
+  <h2 class="section-title">Check Reservation</h2>
+
+  <div class="booking-card" style="max-width: 600px; margin: 0 auto;">
+    
+    <p style="text-align: center; color: #666; margin-bottom: 20px;">
+      Search for a reservation by ID, customer name, phone, or email
+    </p>
+
+    <input type="text" id="searchQuery" placeholder="Enter Reservation ID, Customer Name, Phone, or Email" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 15px;">
+
+    <button id="searchReservationBtn" style="width: 100%; background: #007bff; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s;" onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+      Search Reservation
+    </button>
+
+    <div id="searchResults" style="margin-top: 30px;"></div>
+
+  </div>
+
+</section>
+
+<!-- ALL RESERVATIONS -->
+<section class="container" id="reservations">
+
+  <h2 class="section-title">All Reservations</h2>
+
+  <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+    <div style="flex: 1; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+      <h3>Total Bookings</h3>
+      <p style="font-size: 32px; font-weight: bold; color: #333;" id="totalBookings">0</p>
+    </div>
+    <div style="flex: 1; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+      <h3>Total Revenue</h3>
+      <p style="font-size: 32px; font-weight: bold; color: #28a745;" id="totalRevenue">₱0</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Phone</th>
+        <th>Room</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Guests</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="reservationsTable"></tbody>
+  </table>
+
+</section>
+
+<!-- STAFF MANAGEMENT (Admin Only) -->
+<section class="container" id="staff">
+
+  <h2 class="section-title">Staff Management</h2>
+
+  <div class="booking-card" style="max-width: 800px; margin: 0 auto 30px;">
+    <h3 style="margin-bottom: 20px;">Add New Staff Member</h3>
+    
+    <p style="color: #666; margin-bottom: 20px;">
+      To add a new staff member, they must first create an account on your Supabase authentication page, then you can add them here.
+    </p>
+
+    <input type="email" id="newStaffEmail" placeholder="Staff Email Address *" required>
+    <input type="text" id="newStaffName" placeholder="Full Name *" required>
+    <input type="tel" id="newStaffPhone" placeholder="Phone Number">
+    
+    <select id="newStaffRole" required>
+      <option value="">Select Role *</option>
+      <option value="staff">Staff</option>
+      <option value="manager">Manager</option>
+      <option value="admin">Admin</option>
+    </select>
+
+    <button id="addStaffBtn" style="background: #28a745;">➕ Add Staff Member</button>
+
+    <div id="addStaffResult"></div>
+  </div>
+
+  <h3 style="margin-bottom: 20px;">Current Staff Members</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Joined</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="staffTable"></tbody>
+  </table>
+
+</section>
+
+</div>
+
+<script type="module">
+  import { supabase, signIn, signOut, getCurrentUser, getReservations, getRooms, updateReservation, updateRoom, createOrGetGuest, createReservationWithRooms, searchGuests, getStaff } from './supabase.js';
+
+  let currentStaff = null;
+
+  // ==================== STAFF LOGIN ====================
+  document.getElementById('staffLoginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('staffEmail').value;
+    const password = document.getElementById('staffPassword').value;
+    const msgEl = document.getElementById('staffLoginMsg');
+
+    if (!email || !password) {
+      msgEl.textContent = 'Please fill in all fields';
+      msgEl.style.color = 'red';
+      return;
+    }
+
+    msgEl.textContent = 'Logging in...';
+    msgEl.style.color = 'blue';
+
+    const { data, error } = await signIn(email, password);
+
+    if (error) {
+      msgEl.textContent = 'Login failed: ' + error.message;
+      msgEl.style.color = 'red';
+      return;
+    }
+
+    // Check if user is staff/admin
+    const { data: profile, error: profileError } = await supabase
+      .from('staff')
+      .select('*')
+      .eq('id', data.user.id)
+      .single();
+
+    console.log('Staff check result:', { profile, profileError, userId: data.user.id });
+
+    if (profileError) {
+      msgEl.textContent = 'Error checking staff status: ' + profileError.message;
+      msgEl.style.color = 'red';
+      console.error('Profile error:', profileError);
+      await signOut();
+      return;
+    }
+
+    if (!profile) {
+      msgEl.textContent = 'Access denied. Staff accounts only. User ID: ' + data.user.id;
+      msgEl.style.color = 'red';
+      await signOut();
+      return;
+    }
+
+    currentStaff = { ...data.user, ...profile };
+    showMainSystem();
+  });
+
+  // ==================== SHOW MAIN SYSTEM ====================
+  async function showMainSystem() {
+    document.getElementById('staffLoginSection').style.display = 'none';
+    document.getElementById('mainSystem').style.display = 'block';
+    document.getElementById('staffName').textContent = `Staff: ${currentStaff.full_name || currentStaff.email}`;
+
+    await loadRooms();
+    await loadAllReservations();
+    await loadStaffList();
+  }
+
+  // ==================== CHECK AVAILABILITY ====================
+  document.getElementById('checkAvailabilityBtn').addEventListener('click', async () => {
+    const checkin = document.getElementById('checkin').value;
+    const checkout = document.getElementById('checkout').value;
+
+    if (!checkin || !checkout) {
+      document.getElementById('availabilityMessage').style.display = 'block';
+      document.getElementById('availabilityMessage').innerHTML = '<p style="margin: 0; color: #856404;">⚠️ Please select both check-in and check-out dates.</p>';
+      document.getElementById('roomSelectionSection').style.display = 'none';
+      return;
+    }
+
+    const nights = (new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24);
+
+    if (nights <= 0) {
+      document.getElementById('availabilityMessage').style.display = 'block';
+      document.getElementById('availabilityMessage').innerHTML = '<p style="margin: 0; color: #dc3545;">❌ Check-out date must be after check-in date.</p>';
+      document.getElementById('roomSelectionSection').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('availabilityMessage').style.display = 'block';
+    document.getElementById('availabilityMessage').style.background = '#cfe2ff';
+    document.getElementById('availabilityMessage').style.borderColor = '#0d6efd';
+    document.getElementById('availabilityMessage').innerHTML = '<p style="margin: 0; color: #084298;">🔍 Checking availability...</p>';
+
+    await loadAvailableRoomsForBooking(checkin, checkout);
+
+    document.getElementById('availabilityMessage').style.display = 'block';
+    document.getElementById('availabilityMessage').style.background = '#d1e7dd';
+    document.getElementById('availabilityMessage').style.borderColor = '#28a745';
+    document.getElementById('availabilityMessage').innerHTML = `<p style="margin: 0; color: #0f5132;">✅ Showing available rooms for ${nights} night(s) from ${checkin} to ${checkout}</p>`;
+    document.getElementById('roomSelectionSection').style.display = 'block';
+  });
+
+  // ==================== LOGOUT ====================
+  document.getElementById('staffLogoutBtn').addEventListener('click', async () => {
+    await signOut();
+    currentStaff = null;
+    document.getElementById('mainSystem').style.display = 'none';
+    document.getElementById('staffLoginSection').style.display = 'flex';
+    document.getElementById('staffEmail').value = '';
+    document.getElementById('staffPassword').value = '';
+    document.getElementById('staffLoginMsg').textContent = '';
+  });
+
+  // ==================== LOAD ROOMS ====================
+  async function loadRooms() {
+    const { data: rooms, error } = await getRooms();
+
+    if (error) {
+      console.error('Error loading rooms:', error);
+      return;
+    }
+
+    const container = document.getElementById('roomsContainer');
+    container.innerHTML = '';
+
+    rooms.forEach(room => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${room.image_url || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800'}" alt="${room.room_type}">
+        <div class="room-info">
+          <h3>Room ${room.room_number}</h3>
+          <p><strong>${room.room_type.toUpperCase()}</strong></p>
+          <p>₱${parseFloat(room.price_per_night).toLocaleString()} / night</p>
+          <p>👥 Capacity: ${room.capacity} guests</p>
+          <p style="color: ${room.status === 'available' ? 'green' : 'red'}; font-weight: bold;">
+            ${room.status === 'available' ? '✓ Available' : '✗ ' + room.status}
+          </p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // ==================== LOAD AVAILABLE ROOMS FOR BOOKING ====================
+  let selectedRooms = [];
+
+  async function loadAvailableRoomsForBooking(checkin, checkout) {
+    // Clear previous selections
+    selectedRooms = [];
+    updateSelectedRoomsSummary();
+
+    const { data: rooms, error } = await getRooms();
+
+    if (error) {
+      console.error('Error loading rooms:', error);
+      return;
+    }
+
+    const container = document.getElementById('availableRoomsList');
+    container.innerHTML = '<p style="text-align: center; color: #999;">Checking room availability...</p>';
+
+    // Get all reservations that overlap with the requested dates
+    // Only consider active reservations (not cancelled or checked_out)
+    const { data: reservations, error: resError } = await supabase
+      .from('reservations')
+      .select(`
+        *,
+        reservation_rooms (room_id)
+      `)
+      .in('status', ['confirmed', 'checked_in', 'pending'])
+      .or(`and(check_in.lte.${checkout},check_out.gte.${checkin})`);
+
+    if (resError) {
+      console.error('Error checking reservations:', resError);
+    }
+
+    // Get list of occupied room IDs for the date range
+    const occupiedRoomIds = new Set();
+    if (reservations) {
+      reservations.forEach(reservation => {
+        if (reservation.reservation_rooms) {
+          reservation.reservation_rooms.forEach(rr => {
+            occupiedRoomIds.add(rr.room_id);
+          });
+        }
+      });
+    }
+
+    // Filter to rooms not occupied in date range (ignore room.status field)
+    const availableRooms = rooms.filter(room => !occupiedRoomIds.has(room.id));
+
+    container.innerHTML = '';
+
+    if (availableRooms.length === 0) {
+      container.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 20px;">❌ No rooms available for the selected dates. Please try different dates.</p>';
+      return;
+    }
+
+    container.innerHTML = `<p style="text-align: center; color: #28a745; font-weight: bold; margin-bottom: 15px;">✅ ${availableRooms.length} room(s) available</p>`;
+
+    availableRooms.forEach(room => {
+      const roomCard = document.createElement('div');
+      roomCard.style.cssText = 'display: flex; align-items: center; padding: 12px; margin-bottom: 10px; background: white; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;';
+      roomCard.dataset.roomId = room.id;
+      roomCard.dataset.roomPrice = room.price_per_night;
+      
+      roomCard.innerHTML = `
+        <input type="checkbox" class="room-checkbox" data-room-id="${room.id}" style="width: 20px; height: 20px; margin-right: 15px; cursor: pointer;">
+        <div style="flex: 1;">
+          <h4 style="margin: 0 0 5px 0; color: #333;">Room ${room.room_number} - ${room.room_type}</h4>
+          <p style="margin: 0; color: #666; font-size: 14px;">Capacity: ${room.capacity} guests | ₱${parseFloat(room.price_per_night).toLocaleString()}/night</p>
+        </div>
+      `;
+
+      roomCard.addEventListener('click', (e) => {
+        if (e.target.type !== 'checkbox') {
+          const checkbox = roomCard.querySelector('.room-checkbox');
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change'));
+        }
+      });
+
+      const checkbox = roomCard.querySelector('.room-checkbox');
+      checkbox.addEventListener('change', (e) => {
+        e.stopPropagation();
+        if (e.target.checked) {
+          roomCard.style.borderColor = '#4CAF50';
+          roomCard.style.background = '#f1f8f4';
+          selectedRooms.push({
+            id: room.id,
+            room_number: room.room_number,
+            room_type: room.room_type,
+            price: parseFloat(room.price_per_night)
+          });
+        } else {
+          roomCard.style.borderColor = '#ddd';
+          roomCard.style.background = 'white';
+          selectedRooms = selectedRooms.filter(r => r.id !== room.id);
+        }
+        updateSelectedRoomsSummary();
+      });
+
+      container.appendChild(roomCard);
+    });
+  }
+
+  function updateSelectedRoomsSummary() {
+    const summaryDiv = document.getElementById('selectedRoomsSummary');
+    const listDiv = document.getElementById('selectedRoomsList');
+    const totalSpan = document.getElementById('totalPerNight');
+
+    if (selectedRooms.length === 0) {
+      summaryDiv.style.display = 'none';
+      return;
+    }
+
+    summaryDiv.style.display = 'block';
+    
+    listDiv.innerHTML = selectedRooms.map(room => 
+      `<p style="margin: 5px 0; color: #2e7d32;">✓ Room ${room.room_number} (${room.room_type}) - ₱${room.price.toLocaleString()}/night</p>`
+    ).join('');
+
+    const totalPerNight = selectedRooms.reduce((sum, room) => sum + room.price, 0);
+    totalSpan.textContent = `₱${totalPerNight.toLocaleString()}`;
+  }
+
+  // ==================== CREATE RESERVATION ====================
+  document.getElementById('createReservationBtn').addEventListener('click', async () => {
+    const customerName = document.getElementById('customerName').value;
+    const customerEmail = document.getElementById('customerEmail').value;
+    const customerPhone = document.getElementById('customerPhone').value;
+    const checkin = document.getElementById('checkin').value;
+    const checkout = document.getElementById('checkout').value;
+    const numGuests = parseInt(document.getElementById('numGuests').value);
+    const specialRequests = document.getElementById('specialRequests').value;
+    const payment = document.getElementById('payment').value;
+
+    // Validation
+    if (!customerName || !customerEmail || !customerPhone || !checkin || !checkout || !payment) {
+      alert('Please fill in all required fields!');
+      return;
+    }
+
+    if (selectedRooms.length === 0) {
+      alert('Please select at least one room!');
+      return;
+    }
+
+    // Calculate nights
+    const nights = (new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24);
+
+    if (nights <= 0) {
+      alert('Check-out date must be after check-in date!');
+      return;
+    }
+
+    // Calculate total price
+    const totalPerNight = selectedRooms.reduce((sum, room) => sum + room.price, 0);
+    const total = nights * totalPerNight;
+
+    // Create or get guest
+    const { data: guest, error: guestError } = await createOrGetGuest(customerName, customerEmail, customerPhone);
+
+    if (guestError) {
+      alert('Error creating guest: ' + guestError.message);
+      return;
+    }
+
+    // Create reservation with multiple rooms
+    const reservationData = {
+      guest_id: guest.id,
+      staff_id: currentStaff.id,
+      check_in: checkin,
+      check_out: checkout,
+      total_price: total,
+      num_guests: numGuests,
+      special_requests: specialRequests ? `Payment: ${payment} | ${specialRequests}` : `Payment: ${payment}`,
+      status: 'confirmed'
+    };
+
+    const roomIds = selectedRooms.map(room => room.id);
+
+    const { data: reservation, error: reservationError } = await createReservationWithRooms(
+      reservationData,
+      roomIds
+    );
+
+    if (reservationError) {
+      console.error('Reservation error:', reservationError);
+      alert('Error creating reservation: ' + reservationError.message);
+      return;
+    }
+
+    // Mark rooms as occupied
+    for (const roomId of roomIds) {
+      const { error: updateError } = await updateRoom(roomId, { status: 'occupied' });
+      if (updateError) {
+        console.error('Error updating room status:', updateError);
+      }
+    }
+
+    // Success message
+    const roomsList = selectedRooms.map(room => 
+      `Room ${room.room_number} (${room.room_type}) - ₱${room.price.toLocaleString()}/night`
+    ).join('<br>');
+
+    document.getElementById('result').innerHTML = `
+      <div style="padding:20px; background:#d4edda; border:1px solid #c3e6cb; border-radius:8px; margin-top:15px;">
+        <h3 style="color:#155724;">✅ Reservation Created Successfully!</h3>
+        <p><strong>Reservation ID:</strong> ${reservation.id}</p>
+        <p><strong>Guest:</strong> ${customerName}</p>
+        <p><strong>Guest ID:</strong> ${guest.id}</p>
+        <p><strong>Phone:</strong> ${customerPhone}</p>
+        <p><strong>Rooms (${selectedRooms.length}):</strong><br>${roomsList}</p>
+        <p><strong>Check In:</strong> ${checkin}</p>
+        <p><strong>Check Out:</strong> ${checkout}</p>
+        <p><strong>Nights:</strong> ${nights}</p>
+        <p><strong>Total per night:</strong> ₱${totalPerNight.toLocaleString()}</p>
+        <p><strong>Grand Total:</strong> ₱${total.toLocaleString()}</p>
+        <p><strong>Handled by:</strong> ${currentStaff.full_name || currentStaff.email}</p>
+        <p style="color: #856404; margin-top: 10px;">🔒 Selected rooms are now marked as occupied</p>
+      </div>
+    `;
+
+    // Clear form
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerEmail').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.getElementById('checkin').value = '';
+    document.getElementById('checkout').value = '';
+    document.getElementById('numGuests').value = '1';
+    document.getElementById('specialRequests').value = '';
+    document.getElementById('payment').value = '';
+
+    // Clear selected rooms
+    selectedRooms = [];
+    document.querySelectorAll('.room-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('#availableRoomsList > div').forEach(card => {
+      card.style.borderColor = '#ddd';
+      card.style.background = 'white';
+    });
+    updateSelectedRoomsSummary();
+
+    // Hide room selection and show message to check availability again
+    document.getElementById('roomSelectionSection').style.display = 'none';
+    document.getElementById('availabilityMessage').style.display = 'block';
+    document.getElementById('availabilityMessage').style.background = '#fff3cd';
+    document.getElementById('availabilityMessage').style.borderColor = '#ffc107';
+    document.getElementById('availabilityMessage').innerHTML = '<p style="margin: 0; color: #856404;">Please select new dates and check availability for the next reservation.</p>';
+
+    // Reload everything to show updated room statuses
+    await loadRooms();
+    await loadAllReservations();
+  });
+
+  // ==================== SEARCH RESERVATION ====================
+  document.getElementById('searchReservationBtn').addEventListener('click', async () => {
+    const query = document.getElementById('searchQuery').value.trim();
+    const resultsDiv = document.getElementById('searchResults');
+
+    if (!query) {
+      resultsDiv.innerHTML = '<p style="color: red; text-align: center;">Please enter a search term</p>';
+      return;
+    }
+
+    resultsDiv.innerHTML = '<p style="text-align: center; color: #666;">Searching...</p>';
+
+    // Get all reservations
+    const { data, error } = await getReservations();
+
+    if (error) {
+      resultsDiv.innerHTML = '<p style="color: red; text-align: center;">Error searching reservations</p>';
+      return;
+    }
+
+    // Filter reservations based on query
+    const filtered = data.filter(reservation => {
+      const guest = reservation.guests || {};
+      const reservationId = reservation.id.toString();
+      const searchTerm = query.toLowerCase();
+
+      return (
+        reservationId.includes(searchTerm) ||
+        (guest.full_name && guest.full_name.toLowerCase().includes(searchTerm)) ||
+        (guest.phone && guest.phone.includes(searchTerm)) ||
+        (guest.email && guest.email.toLowerCase().includes(searchTerm))
+      );
+    });
+
+    if (filtered.length === 0) {
+      resultsDiv.innerHTML = `
+        <div style="text-align: center; padding: 30px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px;">
+          <h3 style="color: #856404;">No Reservations Found</h3>
+          <p style="color: #856404;">No reservations match your search: "${query}"</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Display results
+    resultsDiv.innerHTML = `<h3 style="margin-bottom: 20px; color: #333;">Found ${filtered.length} Reservation(s)</h3>`;
+
+    for (const reservation of filtered) {
+      const guest = reservation.guests || {};
+      const staff = reservation.staff || {};
+      const rooms = reservation.reservation_rooms || [];
+      const roomNumbers = rooms.map(r => r.rooms?.room_number || r.room_id).join(', ');
+      const roomTypes = rooms.map(r => r.rooms?.room_type || 'N/A').join(', ');
+
+      const card = document.createElement('div');
+      card.style.cssText = 'background: white; padding: 25px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 5px solid ' + getStatusColor(reservation.status);
+      
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+          <div>
+            <h3 style="margin: 0 0 5px 0; color: #333;">Reservation #${reservation.id}</h3>
+            <span style="padding: 5px 12px; border-radius: 15px; background: ${getStatusColor(reservation.status)}; color: white; font-size: 12px; font-weight: bold;">
+              ${reservation.status.toUpperCase()}
+            </span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+          <div>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Guest:</strong> ${guest.full_name || 'N/A'}</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Email:</strong> ${guest.email || 'N/A'}</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Phone:</strong> ${guest.phone || 'N/A'}</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Guest ID:</strong> ${guest.id || 'N/A'}</p>
+          </div>
+          <div>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Room(s):</strong> ${roomNumbers} (${roomTypes})</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Check In:</strong> ${reservation.check_in}</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Check Out:</strong> ${reservation.check_out}</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Handled by:</strong> ${staff.full_name || staff.email || 'N/A'}</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Guests:</strong> ${reservation.num_guests}</p>
+          <p style="margin: 5px 0; color: #333; font-size: 16px; font-weight: bold;"><strong>Total:</strong> ₱${parseFloat(reservation.total_price).toLocaleString()}</p>
+        </div>
+
+        ${reservation.status !== 'cancelled' && reservation.status !== 'checked_out' ? `
+          <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button class="search-status-btn" data-id="${reservation.id}" data-status="checked_in" 
+              style="flex: 1; background: #28a745; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500;">
+              Check In
+            </button>
+            <button class="search-status-btn" data-id="${reservation.id}" data-status="checked_out" 
+              style="flex: 1; background: #007bff; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500;">
+              Check Out
+            </button>
+            <button class="search-cancel-btn" data-id="${reservation.id}" 
+              style="flex: 1; background: #dc3545; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500;">
+              Cancel
+            </button>
+          </div>
+        ` : ''}
+      `;
+
+      resultsDiv.appendChild(card);
+    }
+
+    // Add event listeners for action buttons
+    document.querySelectorAll('.search-status-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(e.target.dataset.id);
+        const status = e.target.dataset.status;
+        await updateReservation(id, { status });
+        
+        // If checking out, make rooms available again
+        if (status === 'checked_out') {
+          const reservation = filtered.find(r => r.id === id);
+          if (reservation && reservation.reservation_rooms) {
+            for (const rr of reservation.reservation_rooms) {
+              await supabase
+                .from('rooms')
+                .update({ status: 'available' })
+                .eq('id', rr.room_id);
+            }
+          }
+        }
+        
+        alert('Reservation updated!');
+        document.getElementById('searchReservationBtn').click(); // Re-search
+        await loadRooms();
+        await loadAllReservations(); // Refresh all reservations
+      });
+    });
+
+    document.querySelectorAll('.search-cancel-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        if (!confirm('Cancel this reservation?')) return;
+        const id = parseInt(e.target.dataset.id);
+        
+        // Get reservation to find rooms
+        const reservation = filtered.find(r => r.id === id);
+        
+        // Update reservation status
+        await updateReservation(id, { status: 'cancelled' });
+        
+        // Make rooms available again
+        if (reservation && reservation.reservation_rooms) {
+          for (const rr of reservation.reservation_rooms) {
+            await supabase
+              .from('rooms')
+              .update({ status: 'available' })
+              .eq('id', rr.room_id);
+          }
+        }
+        
+        alert('Reservation cancelled! Rooms are now available again.');
+        document.getElementById('searchReservationBtn').click(); // Re-search
+        await loadRooms();
+        await loadAllReservations(); // Refresh all reservations
+      });
+    });
+  });
+
+  // ==================== LOAD ALL RESERVATIONS ====================
+  async function loadAllReservations() {
+    const { data, error } = await getReservations();
+
+    if (error) {
+      console.error('Error loading reservations:', error);
+      return;
+    }
+
+    const table = document.getElementById('reservationsTable');
+    table.innerHTML = '';
+
+    let totalBookings = 0;
+    let totalRevenue = 0;
+
+    if (!data || data.length === 0) {
+      table.innerHTML = '<tr><td colspan="10" style="text-align: center;">No reservations yet</td></tr>';
+      document.getElementById('totalBookings').textContent = '0';
+      document.getElementById('totalRevenue').textContent = '₱0';
+      return;
+    }
+
+    data.forEach(reservation => {
+      totalBookings++;
+      totalRevenue += parseFloat(reservation.total_price);
+
+      const guest = reservation.guests || {};
+      const staff = reservation.staff || {};
+      const rooms = reservation.reservation_rooms || [];
+      const roomNumbers = rooms.map(r => r.rooms?.room_number || r.room_id).join(', ');
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${reservation.id}</td>
+        <td>${guest.full_name || 'N/A'}</td>
+        <td>${guest.phone || 'N/A'}</td>
+        <td>Room ${roomNumbers}</td>
+        <td>${reservation.check_in}</td>
+        <td>${reservation.check_out}</td>
+        <td>${reservation.num_guests}</td>
+        <td>₱${parseFloat(reservation.total_price).toLocaleString()}</td>
+        <td>
+          <span style="padding: 5px 10px; border-radius: 5px; background: ${getStatusColor(reservation.status)}; color: white; font-weight: bold;">
+            ${reservation.status}
+          </span>
+        </td>
+        <td>
+          ${reservation.status !== 'cancelled' && reservation.status !== 'checked_out' ? `
+            <button class="status-btn" data-id="${reservation.id}" data-status="checked_in" 
+              style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin: 2px;">
+              Check In
+            </button>
+            <button class="status-btn" data-id="${reservation.id}" data-status="checked_out" 
+              style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin: 2px;">
+              Check Out
+            </button>
+            <button class="cancel-btn" data-id="${reservation.id}" 
+              style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin: 2px;">
+              Cancel
+            </button>
+          ` : `
+            <button disabled style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 5px;">
+              Completed
+            </button>
+          `}
+        </td>
+      `;
+      table.appendChild(row);
+    });
+
+    document.getElementById('totalBookings').textContent = totalBookings;
+    document.getElementById('totalRevenue').textContent = '₱' + totalRevenue.toLocaleString();
+
+    // Add event listeners
+    document.querySelectorAll('.status-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(e.target.dataset.id);
+        const status = e.target.dataset.status;
+        await updateReservation(id, { status });
+        
+        // If checking out, make rooms available again
+        if (status === 'checked_out') {
+          const reservation = data.find(r => r.id === id);
+          if (reservation && reservation.reservation_rooms) {
+            for (const rr of reservation.reservation_rooms) {
+              await supabase
+                .from('rooms')
+                .update({ status: 'available' })
+                .eq('id', rr.room_id);
+            }
+          }
+        }
+        
+        alert('Reservation updated!');
+        await loadRooms();
+        await loadAllReservations();
+      });
+    });
+
+    document.querySelectorAll('.cancel-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        if (!confirm('Cancel this reservation?')) return;
+        const id = parseInt(e.target.dataset.id);
+        
+        // Get reservation to find rooms
+        const reservation = data.find(r => r.id === id);
+        
+        // Update reservation status
+        await updateReservation(id, { status: 'cancelled' });
+        
+        // Make rooms available again
+        if (reservation && reservation.reservation_rooms) {
+          for (const rr of reservation.reservation_rooms) {
+            await supabase
+              .from('rooms')
+              .update({ status: 'available' })
+              .eq('id', rr.room_id);
+          }
+        }
+        
+        alert('Reservation cancelled! Rooms are now available again.');
+        await loadRooms();
+        await loadAllReservations();
+      });
+    });
+  }
+
+  function getStatusColor(status) {
+    switch (status) {
+      case 'pending': return '#ffc107';
+      case 'confirmed': return '#28a745';
+      case 'checked_in': return '#007bff';
+      case 'checked_out': return '#6c757d';
+      case 'cancelled': return '#dc3545';
+      default: return '#6c757d';
+    }
+  }
+
+  // ==================== STAFF MANAGEMENT ====================
+
+  // Add new staff member
+  document.getElementById('addStaffBtn').addEventListener('click', async () => {
+    const email = document.getElementById('newStaffEmail').value.trim();
+    const name = document.getElementById('newStaffName').value.trim();
+    const phone = document.getElementById('newStaffPhone').value.trim();
+    const role = document.getElementById('newStaffRole').value;
+    const resultDiv = document.getElementById('addStaffResult');
+
+    if (!email || !name || !role) {
+      resultDiv.innerHTML = '<p style="color: red; margin-top: 15px;">Please fill in all required fields.</p>';
+      return;
+    }
+
+    // Check if user is admin
+    if (currentStaff.role !== 'admin') {
+      resultDiv.innerHTML = '<p style="color: red; margin-top: 15px;">Only admins can add staff members.</p>';
+      return;
+    }
+
+    resultDiv.innerHTML = '<p style="color: blue; margin-top: 15px;">Adding staff member...</p>';
+
+    // First, check if user exists in auth.users
+    const { data: authUsers, error: authError } = await supabase
+      .from('auth.users')
+      .select('id')
+      .eq('email', email);
+
+    // Since we can't directly query auth.users, we'll try to add them to staff table
+    // The user must have already signed up in Supabase Auth
+    
+    // Try to find the user by inviting them or checking if they exist
+    // For now, we'll use a workaround: insert into staff table with a note
+    
+    resultDiv.innerHTML = '<p style="color: orange; margin-top: 15px;">⚠️ Important: The user must first create an account at your Supabase Auth page with this email, then run this SQL in Supabase:</p>';
+    
+    const sqlCode = `
+-- Add staff member: ${name}
+INSERT INTO staff (id, full_name, email, phone, role)
+SELECT id, '${name}', '${email}', ${phone ? `'${phone}'` : 'NULL'}, '${role}'
+FROM auth.users
+WHERE email = '${email}'
+ON CONFLICT (id) DO UPDATE 
+SET full_name = '${name}', 
+    phone = ${phone ? `'${phone}'` : 'NULL'}, 
+    role = '${role}';
+    `.trim();
+
+    resultDiv.innerHTML = `
+      <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px;">
+        <h4 style="margin: 0 0 10px 0; color: #856404;">📋 Instructions to Add Staff Member</h4>
+        <ol style="margin: 10px 0; padding-left: 20px; color: #856404;">
+          <li>Ask <strong>${name}</strong> to sign up at your Supabase project with email: <strong>${email}</strong></li>
+          <li>After they sign up, copy and run this SQL in Supabase SQL Editor:</li>
+        </ol>
+        <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 12px; border: 1px solid #ddd;">${sqlCode}</pre>
+        <button onclick="navigator.clipboard.writeText(\`${sqlCode.replace(/`/g, '\\`')}\`); alert('SQL copied to clipboard!')" 
+          style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+          📋 Copy SQL
+        </button>
+      </div>
+    `;
+
+    // Clear form
+    document.getElementById('newStaffEmail').value = '';
+    document.getElementById('newStaffName').value = '';
+    document.getElementById('newStaffPhone').value = '';
+    document.getElementById('newStaffRole').value = '';
+  });
+
+  // Load staff list
+  async function loadStaffList() {
+    const { data: staffList, error } = await getStaff();
+
+    if (error) {
+      console.error('Error loading staff:', error);
+      return;
+    }
+
+    const table = document.getElementById('staffTable');
+    table.innerHTML = '';
+
+    if (!staffList || staffList.length === 0) {
+      table.innerHTML = '<tr><td colspan="6" style="text-align: center;">No staff members found</td></tr>';
+      return;
+    }
+
+    staffList.forEach(staff => {
+      const row = document.createElement('tr');
+      const joinDate = new Date(staff.created_at).toLocaleDateString();
+      
+      row.innerHTML = `
+        <td>${staff.full_name}</td>
+        <td>${staff.email}</td>
+        <td>${staff.phone || 'N/A'}</td>
+        <td>
+          <span style="padding: 5px 10px; border-radius: 5px; background: ${getRoleColor(staff.role)}; color: white; font-weight: bold; text-transform: uppercase; font-size: 12px;">
+            ${staff.role}
+          </span>
+        </td>
+        <td>${joinDate}</td>
+        <td>
+          ${currentStaff.role === 'admin' && staff.id !== currentStaff.id ? `
+            <button class="remove-staff-btn" data-id="${staff.id}" data-name="${staff.full_name}"
+              style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">
+              Remove
+            </button>
+          ` : `
+            <span style="color: #999; font-size: 12px;">${staff.id === currentStaff.id ? '(You)' : '-'}</span>
+          `}
+        </td>
+      `;
+      table.appendChild(row);
+    });
+
+    // Add event listeners for remove buttons
+    document.querySelectorAll('.remove-staff-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const staffId = e.target.dataset.id;
+        const staffName = e.target.dataset.name;
+        
+        if (!confirm(`Remove ${staffName} from staff? They will no longer be able to access the system.`)) {
+          return;
+        }
+
+        const { error } = await supabase
+          .from('staff')
+          .delete()
+          .eq('id', staffId);
+
+        if (error) {
+          alert('Error removing staff: ' + error.message);
+        } else {
+          alert(`${staffName} has been removed from staff.`);
+          await loadStaffList();
+        }
+      });
+    });
+  }
+
+  function getRoleColor(role) {
+    switch (role) {
+      case 'admin': return '#dc3545';
+      case 'manager': return '#007bff';
+      case 'staff': return '#28a745';
+      default: return '#6c757d';
+    }
+  }
+
+  // Check if already logged in
+  async function checkAuth() {
+    const { user } = await getCurrentUser();
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role === 'admin') {
+        currentStaff = { ...user, ...profile };
+        showMainSystem();
+      }
+    }
+  }
+
+  checkAuth();
+</script>
+
+</body>
+</html>
